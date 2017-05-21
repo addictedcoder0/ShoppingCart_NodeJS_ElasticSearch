@@ -5,13 +5,13 @@ var mongoose = require('mongoose');
 var User = require('./models/user.js');
 var bodyParser = require('body-parser');
 var ejs = require('ejs');
-var ejs-mate = require('ejs-mate');
+var engine = require('ejs-mate');
 
 
 // having special symbols like @ , / or : in password could cause problem at the time of connection http://docs.mlab.com/connecting/#users
 // solution : http://stackoverflow.com/questions/7486623/mongodb-password-with-in-it
 
-mongoose.connect('mongodb://<user>:<password>@ds149491.mlab.com:49491/shoppingcart_294',{
+mongoose.connect('mongodb://root:enso%40123@ds149491.mlab.com:49491/shoppingcart_294',{
   uri_decode_auth: true
     }, function(err, db) {
       if(err){
@@ -25,10 +25,19 @@ mongoose.connect('mongodb://<user>:<password>@ds149491.mlab.com:49491/shoppingca
 app.use(morgan('dev'));
 app.use(bodyParser.json());  // enables us to parse the json body
 app.use(bodyParser.urlencoded({ extended : true }));
+app.engine('ejs',engine);
+app.set('view engine','ejs');
+
 
 app.get('/',function(req,res){
-  var name = 'rudra';
-  res.json('my name is  '+name);
+  // var name = 'rudra';
+  // res.json('my name is  '+name);
+res.render('main/home');  // no need to put 'home.ejs'  and remember the folder name must be 'views'
+
+});
+
+app.get('/about',function(req,res){
+  res.render('main/about');
 });
 
 app.post('/createUser',function(req,res,next){
